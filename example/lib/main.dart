@@ -30,8 +30,7 @@ class GroupedButton extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         label: Text('Radio Button'),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => RadioButton()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RadioButton()));
         },
         icon: Icon(Icons.radio_button_checked),
       ),
