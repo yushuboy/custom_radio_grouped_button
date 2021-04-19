@@ -2,7 +2,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 
 class RadioButton extends StatelessWidget {
-  const RadioButton({Key key}) : super(key: key);
+  const RadioButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +63,8 @@ class RadioButton extends StatelessWidget {
                         ),
                         itemMargin: 3,
                         selectedColor: Theme.of(context).accentColor,
+                        selectedBorderColor: Theme.of(context).accentColor,
+                        unSelectedBorderColor: Theme.of(context).canvasColor,
                       ),
                     ],
                   ),
@@ -84,6 +86,7 @@ class RadioButton extends StatelessWidget {
                         horizontal: true,
                         enableShape: true,
                         elevation: 0,
+                        itemMargin: 3,
                         unSelectedColor: Theme.of(context).canvasColor,
                         buttonLables: [
                           'Student',
@@ -95,11 +98,17 @@ class RadioButton extends StatelessWidget {
                           2,
                           3,
                         ],
+                        customShape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
                         defaultSelected: 1,
                         radioButtonValue: (value) {
                           print(value);
                         },
                         selectedColor: Theme.of(context).accentColor,
+                        selectedBorderColor: Theme.of(context).accentColor,
+                        unSelectedBorderColor: Theme.of(context).canvasColor,
                       ),
                     ],
                   ),
@@ -134,7 +143,6 @@ class RadioButton extends StatelessWidget {
                     CustomRadioButton(
                       elevation: 0,
                       itemMargin: 0,
-                      unSelectedColor: Theme.of(context).canvasColor,
                       buttonLables: [
                         'Student',
                         'Parent',
@@ -145,6 +153,10 @@ class RadioButton extends StatelessWidget {
                         "PARENT",
                         "TEACHER",
                       ],
+                      enableShape: true,
+                      customShape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.blue, width: 1),
+                      ),
                       buttonTextStyle: ButtonTextStyle(
                           selectedColor: Colors.white,
                           unSelectedColor: Colors.black,
@@ -152,7 +164,11 @@ class RadioButton extends StatelessWidget {
                       radioButtonValue: (value) {
                         print(value);
                       },
+                      defaultSelected: 'STUDENT',
                       selectedColor: Theme.of(context).accentColor,
+                      unSelectedColor: Theme.of(context).canvasColor,
+                      selectedBorderColor: Theme.of(context).accentColor,
+                      unSelectedBorderColor: Theme.of(context).canvasColor,
                     ),
                   ],
                 ),
@@ -172,13 +188,13 @@ class RadioButton extends StatelessWidget {
                       enableShape: true,
                       elevation: 0,
                       itemMargin: 1,
+                      height: 30,
                       defaultSelected: "Sunday",
                       enableRowAverage: true,
                       autoWidth: false,
-                      unSelectedColor: Theme.of(context).canvasColor,
                       buttonLables: [
-                        // "Monday",
-                        // "Tuesday",
+                        "Monday",
+                        "Tuesday",
                         "Wednesday",
                         "Thursday",
                         "Friday",
@@ -186,8 +202,8 @@ class RadioButton extends StatelessWidget {
                         "Sunday",
                       ],
                       buttonValues: [
-                        // "Monday",
-                        // "Tuesday",
+                        "Monday",
+                        "Tuesday",
                         "Wednesday",
                         "Thursday",
                         "Friday",
@@ -197,7 +213,14 @@ class RadioButton extends StatelessWidget {
                       radioButtonValue: (value) {
                         print(value);
                       },
+                      customShape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.blue, width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                      ),
                       selectedColor: Theme.of(context).accentColor,
+                      unSelectedColor: Theme.of(context).canvasColor,
+                      selectedBorderColor: Theme.of(context).accentColor,
+                      unSelectedBorderColor: Theme.of(context).canvasColor,
                     ),
                   ],
                 ),

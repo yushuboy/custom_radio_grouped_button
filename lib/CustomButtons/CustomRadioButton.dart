@@ -5,34 +5,35 @@ import '../custom_radio_grouped_button.dart';
 // ignore: must_be_immutable
 class CustomRadioButton<T> extends StatefulWidget {
   CustomRadioButton({
-    this.buttonLables,
-    this.buttonValues,
+    required this.buttonLables,
+    required this.buttonValues,
     this.buttonTextStyle = const ButtonTextStyle(),
     this.autoWidth = false,
-    this.radioButtonValue,
-    this.unSelectedColor,
-    this.unSelectedBorderColor,
-    this.padding = 3,
+    required this.radioButtonValue,
+    required this.unSelectedColor,
+    required this.unSelectedBorderColor,
+    this.padding = 0,
     this.itemMargin = 0.0,
-    this.selectedColor,
-    this.selectedBorderColor,
+    required this.selectedColor,
+    required this.selectedBorderColor,
     this.height = 35,
     this.width = 100,
     this.enableButtonWrap = false,
     this.horizontal = false,
     this.enableShape = false,
     this.elevation = 10,
-    this.defaultSelected,
+    required this.defaultSelected,
     this.customShape,
     this.enableRowAverage = false,
     this.wrapAlignment = WrapAlignment.start,
   })  : assert(buttonLables.length == buttonValues.length,
             "Button values list and button lables list should have same number of eliments "),
-        assert(unSelectedColor != null, "Unselected color cannot be null"),
-        assert(buttonValues.toSet().length == buttonValues.length, "Multiple buttons with same value cannot exist"),
-        // assert(buttonLables.toSet().length == buttonLables.length,
-        //     "Multiple buttons label wth same value cannot exist"),
-        assert(selectedColor != null, "Selected color cannot be null");
+        assert((customShape != null && enableShape == true) || (customShape == null),
+            "customShape only works when enableShape is true"),
+        assert(buttonValues.toSet().length == buttonValues.length, "Multiple buttons with same value cannot exist");
+
+  // assert(buttonLables.toSet().length == buttonLables.length,
+  //     "Multiple buttons label wth same value cannot exist"),
 
   ///Orientation of the Button Group
   final bool horizontal;
@@ -42,6 +43,7 @@ class CustomRadioButton<T> extends StatefulWidget {
 
   ///Default value is 35
   final double height;
+
   double padding;
 
   ///Spacing between buttons
@@ -78,7 +80,7 @@ class CustomRadioButton<T> extends StatefulWidget {
   final Color selectedBorderColor;
 
   /// A custom Shape can be applied (will work only if [enableShape] is true)
-  final ShapeBorder customShape;
+  final ShapeBorder? customShape;
 
   ///alignment for button when [enableButtonWrap] is true
   final WrapAlignment wrapAlignment;
@@ -86,6 +88,7 @@ class CustomRadioButton<T> extends StatefulWidget {
   /// This will enable button wrap (will work only if orientation is vertical)
   final bool enableButtonWrap;
 
+  ///Average score on a row
   final bool enableRowAverage;
 
   ///if true button will have rounded corners
@@ -97,13 +100,10 @@ class CustomRadioButton<T> extends StatefulWidget {
 }
 
 class _CustomRadioButtonState extends State<CustomRadioButton> {
-  String _currentSelectedLabel;
+  String? _currentSelectedLabel;
 
   Color borderColor(index) =>
-      (_currentSelectedLabel == widget.buttonLables[index]
-          ? widget.selectedBorderColor
-          : widget.unSelectedBorderColor) ??
-      Theme.of(context).primaryColor;
+      (_currentSelectedLabel == widget.buttonLables[index] ? widget.selectedBorderColor : widget.unSelectedBorderColor);
 
   @override
   void initState() {

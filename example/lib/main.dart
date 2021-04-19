@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class GroupedButton extends StatelessWidget {
-  const GroupedButton({Key key}) : super(key: key);
+  const GroupedButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +85,13 @@ class GroupedButton extends StatelessWidget {
                         width: 120,
                         // hight: 50,
                         selectedColor: Theme.of(context).accentColor,
-                        padding: 5,
-                        spacing: 0.0,
+                        itemMargin: 3.0,
+                        selectedBorderColor: Theme.of(context).accentColor,
+                        unSelectedBorderColor: Theme.of(context).canvasColor,
+                        enableShape: true,
+                        customShape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1),
+                        ),
                         // enableShape: true,
                       ),
                     ],
@@ -128,7 +133,14 @@ class GroupedButton extends StatelessWidget {
                         // hight: 50,
                         selectedColor: Theme.of(context).accentColor,
                         padding: 5,
+                        itemMargin: 3,
+                        selectedBorderColor: Theme.of(context).accentColor,
+                        unSelectedBorderColor: Theme.of(context).canvasColor,
                         enableShape: true,
+                        customShape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                        ),
                       ),
                     ],
                   ),
@@ -190,15 +202,18 @@ class GroupedButton extends StatelessWidget {
                       checkBoxButtonValues: (values) {
                         print(values);
                       },
-                      spacing: 0,
                       defaultSelected: ["Monday"],
                       horizontal: false,
                       enableButtonWrap: false,
                       width: 40,
-                      absoluteZeroSpacing: false,
                       selectedColor: Theme.of(context).accentColor,
                       padding: 10,
-                      // enableShape: true,
+                      selectedBorderColor: Theme.of(context).accentColor,
+                      unSelectedBorderColor: Theme.of(context).canvasColor,
+                      enableShape: true,
+                      customShape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.blue, width: 1),
+                      ),
                     ),
                   ],
                 ),
@@ -219,7 +234,7 @@ class GroupedButton extends StatelessWidget {
                         selectedColor: Colors.white,
                         unSelectedColor: Colors.black,
                         textStyle: TextStyle(
-                          fontSize: 16,
+                          fontSize: 10,
                         ),
                       ),
                       autoWidth: false,
@@ -248,12 +263,16 @@ class GroupedButton extends StatelessWidget {
                         print(values);
                       },
                       defaultSelected: ["Sunday"],
-                      horizontal: false,
+                      enableRowAverage: true,
                       width: 120,
-                      // hight: 50,
                       selectedColor: Theme.of(context).accentColor,
-                      padding: 5,
+                      selectedBorderColor: Theme.of(context).accentColor,
+                      unSelectedBorderColor: Theme.of(context).canvasColor,
                       enableShape: true,
+                      customShape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.blue, width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                      ),
                     ),
                   ],
                 ),

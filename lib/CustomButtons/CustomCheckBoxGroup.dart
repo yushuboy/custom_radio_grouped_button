@@ -1,48 +1,46 @@
-import 'package:flutter/material.dart';
-
 import 'package:custom_radio_grouped_button/CustomButtons/ButtonTextStyle.dart';
+import 'package:flutter/material.dart';
 
 import '../custom_radio_grouped_button.dart';
 
 // ignore: must_be_immutable
 class CustomCheckBoxGroup<T> extends StatefulWidget {
   CustomCheckBoxGroup({
-    Key key,
+    Key? key,
     this.horizontal = false,
-    this.buttonValuesList,
+    required this.buttonValuesList,
     this.buttonTextStyle = const ButtonTextStyle(),
     this.height = 35,
-    this.padding = 3,
-    this.spacing = 0.0,
+    this.padding = 0,
+    this.itemMargin = 0.0,
     this.autoWidth = false,
     this.width = 100,
     this.enableShape = false,
     this.elevation = 0,
-    this.buttonLables,
-    this.checkBoxButtonValues,
-    this.selectedColor,
-    this.selectedBorderColor,
+    required this.buttonLables,
+    required this.checkBoxButtonValues,
+    required this.selectedColor,
+    required this.selectedBorderColor,
     this.wrapAlignment = WrapAlignment.start,
-    this.defaultSelected,
-    this.unSelectedColor,
-    this.unSelectedBorderColor,
+    required this.defaultSelected,
+    required this.unSelectedColor,
+    required this.unSelectedBorderColor,
     this.customShape,
-    this.absoluteZeroSpacing = false,
     this.enableButtonWrap = false,
+    this.enableRowAverage = false,
   })  : assert(buttonLables.length == buttonValuesList.length,
             "Button values list and button lables list should have same number of eliments "),
         assert(unSelectedColor != null, "Unselected color cannot be null"),
         assert(buttonValuesList.toSet().length == buttonValuesList.length,
             "Multiple buttons with same value cannot exist"),
+        assert((customShape != null && enableShape == true) || (customShape == null),
+            "customShape only works when enableShape is true"),
         // assert(buttonLables.toSet().length == buttonLables.length,
         //     "Multiple buttons label wth same value cannot exist"),
         assert(selectedColor != null, "Selected color cannot be null");
 
   ///Orientation of the Button Group
   final bool horizontal;
-
-  ///This option will make sure that there is no spacing in between buttons
-  final bool absoluteZeroSpacing;
 
   ///Values of button
   final List<T> buttonValuesList;
@@ -55,7 +53,7 @@ class CustomCheckBoxGroup<T> extends StatefulWidget {
   double padding;
 
   ///Spacing between buttons
-  double spacing;
+  double itemMargin;
 
   ///Only applied when in vertical mode
   ///This will use minimum space required
@@ -86,7 +84,6 @@ class CustomCheckBoxGroup<T> extends StatefulWidget {
   ///Default Selected button
   final T defaultSelected;
 
-
   ///Unselected Color of the button
   final Color unSelectedColor;
 
@@ -94,10 +91,13 @@ class CustomCheckBoxGroup<T> extends StatefulWidget {
   final Color unSelectedBorderColor;
 
   /// A custom Shape can be applied (will work only if [enableShape] is true)
-  final ShapeBorder customShape;
+  final ShapeBorder? customShape;
 
   /// This will enable button wrap (will work only if orientation is vertical)
   final bool enableButtonWrap;
+
+  ///Average score on a row
+  final bool enableRowAverage;
 
   _CustomCheckBoxGroupState createState() => _CustomCheckBoxGroupState();
 }
@@ -105,7 +105,7 @@ class CustomCheckBoxGroup<T> extends StatefulWidget {
 class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
   List<dynamic> selectedLables = [];
 
-  Color borderColor(e) => (selectedLables.contains(e) ? widget.selectedBorderColor : widget.unSelectedBorderColor) ?? Theme.of(context).primaryColor;
+  Color borderColor(e) => (selectedLables.contains(e) ? widget.selectedBorderColor : widget.unSelectedBorderColor);
 
   @override
   void initState() {
@@ -123,10 +123,8 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
       return Padding(
         padding: EdgeInsets.all(widget.padding),
         child: Card(
-          margin: EdgeInsets.all(widget.absoluteZeroSpacing ? 0 : 4),
-          color: selectedLables.contains(e)
-              ? widget.selectedColor
-              : widget.unSelectedColor,
+          margin: EdgeInsets.all(widget.itemMargin),
+          color: selectedLables.contains(e) ? widget.selectedColor : widget.unSelectedColor,
           elevation: widget.elevation,
           shape: widget.enableShape
               ? widget.customShape == null
@@ -141,14 +139,12 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
               shape: widget.enableShape
                   ? widget.customShape == null
                       ? OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: borderColor(e), width: 1),
+                          borderSide: BorderSide(color: borderColor(e), width: 1),
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         )
                       : widget.customShape
                   : OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: borderColor(e), width: 1),
+                      borderSide: BorderSide(color: borderColor(e), width: 1),
                       borderRadius: BorderRadius.zero,
                     ),
               onPressed: () {
@@ -184,10 +180,8 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
     return widget.buttonValuesList.map((e) {
       int index = widget.buttonValuesList.indexOf(e);
       return Card(
-        margin: EdgeInsets.all(widget.absoluteZeroSpacing ? 0 : 4),
-        color: selectedLables.contains(e)
-            ? widget.selectedColor
-            : widget.unSelectedColor,
+        margin: EdgeInsets.all(widget.itemMargin),
+        color: selectedLables.contains(e) ? widget.selectedColor : widget.unSelectedColor,
         elevation: widget.elevation,
         shape: widget.enableShape
             ? widget.customShape == null
@@ -204,14 +198,12 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
             shape: widget.enableShape
                 ? widget.customShape == null
                     ? OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: borderColor(e), width: 1),
+                        borderSide: BorderSide(color: borderColor(e), width: 1),
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       )
                     : widget.customShape
                 : OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: borderColor(e), width: 1),
+                    borderSide: BorderSide(color: borderColor(e), width: 1),
                     borderRadius: BorderRadius.zero,
                   ),
             onPressed: () {
@@ -245,21 +237,26 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.absoluteZeroSpacing) {
-      widget.spacing = 0;
+    if (widget.itemMargin == 0) {
       widget.padding = 0;
     }
     return _buildCheckBoxButtons();
   }
 
   _buildCheckBoxButtons() {
+    if (widget.enableRowAverage)
+      return Container(
+        child: Row(
+          children: _buildButtonsRowSpaceEvenly(_buildButtonsRow()),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ),
+      );
     if (widget.horizontal)
       return Container(
-        height: widget.height * (widget.buttonLables.length * 1.5) +
-            widget.padding * 2 * widget.buttonLables.length,
+        height: widget.height * (widget.buttonLables.length * 1.5) + widget.padding * 2 * widget.buttonLables.length,
         child: Center(
           child: CustomListViewSpacing(
-            spacing: widget.spacing,
+            spacing: widget.itemMargin,
             scrollDirection: Axis.vertical,
             children: _buildButtonsColumn(),
           ),
@@ -269,7 +266,7 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
       return Container(
         child: Center(
           child: Wrap(
-            spacing: widget.spacing,
+            spacing: widget.itemMargin,
             direction: Axis.horizontal,
             alignment: widget.wrapAlignment,
             children: _buildButtonsRow(),
@@ -281,11 +278,18 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
         height: widget.height + widget.padding * 2,
         child: Center(
           child: CustomListViewSpacing(
-            spacing: widget.spacing,
+            spacing: widget.itemMargin,
             scrollDirection: Axis.horizontal,
             children: _buildButtonsRow(),
           ),
         ),
       );
+  }
+
+  //Average score on a line
+  List<Widget> _buildButtonsRowSpaceEvenly(List<Widget> list) {
+    return list.map((e) {
+      return Expanded(child: e, flex: 1);
+    }).toList();
   }
 }
