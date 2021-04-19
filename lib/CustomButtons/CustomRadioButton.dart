@@ -12,8 +12,8 @@ class CustomRadioButton<T> extends StatefulWidget {
     required this.radioButtonValue,
     required this.unSelectedColor,
     required this.unSelectedBorderColor,
-    this.padding = 0,
-    this.itemMargin = 0.0,
+    this.itemPadding = const EdgeInsets.all(0),
+    this.itemMargin = const EdgeInsets.all(0),
     required this.selectedColor,
     required this.selectedBorderColor,
     this.height = 35,
@@ -44,10 +44,11 @@ class CustomRadioButton<T> extends StatefulWidget {
   ///Default value is 35
   final double height;
 
-  double padding;
+  ///button padding
+  final EdgeInsetsGeometry itemPadding;
 
   ///Spacing between buttons
-  double itemMargin;
+  final EdgeInsetsGeometry itemMargin;
 
   ///Default selected value
   final T defaultSelected;
@@ -118,66 +119,11 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
   }
 
   List<Widget> _buildButtonsColumn() {
-    return widget.buttonValues.map((e) {
-      int index = widget.buttonValues.indexOf(e);
-      return Padding(
-        padding: EdgeInsets.all(widget.padding),
-        child: Card(
-          margin: EdgeInsets.all(widget.itemMargin),
-          color: _currentSelectedLabel == widget.buttonLables[index] ? widget.selectedColor : widget.unSelectedColor,
-          elevation: widget.elevation,
-          shape: widget.enableShape
-              ? widget.customShape == null
-                  ? RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                    )
-                  : widget.customShape
-              : null,
-          child: Container(
-            height: widget.height,
-            child: MaterialButton(
-              shape: widget.enableShape
-                  ? widget.customShape == null
-                      ? OutlineInputBorder(
-                          borderSide: BorderSide(color: borderColor(index), width: 1),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        )
-                      : widget.customShape
-                  : OutlineInputBorder(
-                      borderSide: BorderSide(color: borderColor(index), width: 1),
-                      borderRadius: BorderRadius.zero,
-                    ),
-              onPressed: () {
-                widget.radioButtonValue(e);
-                setState(() {
-                  _currentSelectedLabel = widget.buttonLables[index];
-                });
-              },
-              child: Center(
-                child: Text(
-                  widget.buttonLables[index],
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: widget.buttonTextStyle.textStyle.copyWith(
-                    color: _currentSelectedLabel == widget.buttonLables[index]
-                        ? widget.buttonTextStyle.selectedColor
-                        : widget.buttonTextStyle.unSelectedColor,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  List<Widget> _buildButtonsRow() {
+    widget.buttonValues.map((e) => null);
     return widget.buttonValues.map((e) {
       int index = widget.buttonValues.indexOf(e);
       return Card(
-        margin: EdgeInsets.all(widget.itemMargin),
+        margin: widget.itemMargin,
         color: _currentSelectedLabel == widget.buttonLables[index] ? widget.selectedColor : widget.unSelectedColor,
         elevation: widget.elevation,
         shape: widget.enableShape
@@ -189,9 +135,8 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
             : null,
         child: Container(
           height: widget.height,
-          width: widget.autoWidth ? null : widget.width,
-          constraints: BoxConstraints(maxWidth: 250),
           child: MaterialButton(
+            padding: widget.itemPadding,
             shape: widget.enableShape
                 ? widget.customShape == null
                     ? OutlineInputBorder(
@@ -228,11 +173,62 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
     }).toList();
   }
 
+  List<Widget> _buildButtonsRow() {
+    return widget.buttonValues.map<Widget>((e) {
+      int index = widget.buttonValues.indexOf(e);
+      return Card(
+        margin: widget.itemMargin,
+        color: _currentSelectedLabel == widget.buttonLables[index] ? widget.selectedColor : widget.unSelectedColor,
+        elevation: widget.elevation,
+        shape: widget.enableShape
+            ? widget.customShape == null
+                ? RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                  )
+                : widget.customShape
+            : null,
+        child: Container(
+          height: widget.height,
+          width: widget.autoWidth ? null : widget.width,
+          constraints: BoxConstraints(maxWidth: 250),
+          child: MaterialButton(
+            padding: widget.itemPadding,
+            shape: widget.enableShape
+                ? widget.customShape == null
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(color: borderColor(index), width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      )
+                    : widget.customShape
+                : OutlineInputBorder(
+                    borderSide: BorderSide(color: borderColor(index), width: 1),
+                    borderRadius: BorderRadius.zero,
+                  ),
+            onPressed: () {
+              widget.radioButtonValue(e);
+              setState(() {
+                _currentSelectedLabel = widget.buttonLables[index];
+              });
+            },
+            child: Text(
+              widget.buttonLables[index],
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: widget.buttonTextStyle.textStyle.copyWith(
+                color: _currentSelectedLabel == widget.buttonLables[index]
+                    ? widget.buttonTextStyle.selectedColor
+                    : widget.buttonTextStyle.unSelectedColor,
+              ),
+            ),
+          ),
+        ),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (widget.itemMargin == 0) {
-      widget.padding = 0;
-    }
     return _buildRadioButtons();
   }
 
@@ -246,20 +242,20 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
       );
     if (widget.horizontal)
       return Container(
-        height: widget.height * (widget.buttonLables.length * 1.5) + widget.padding * 2 * widget.buttonLables.length,
+        height: widget.height,
         child: Center(
           child: CustomListViewSpacing(
-            spacing: widget.itemMargin,
-            scrollDirection: Axis.vertical,
-            children: _buildButtonsColumn(),
+            spacing: widget.itemMargin.horizontal,
+            scrollDirection: Axis.horizontal,
+            children: _buildButtonsRow(),
           ),
         ),
       );
-    if (!widget.horizontal && widget.enableButtonWrap)
+    if (widget.horizontal && widget.enableButtonWrap)
       return Container(
         child: Center(
           child: Wrap(
-            spacing: widget.itemMargin,
+            spacing: widget.itemMargin.horizontal,
             direction: Axis.horizontal,
             alignment: widget.wrapAlignment,
             children: _buildButtonsRow(),
@@ -268,12 +264,12 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
       );
     if (!widget.horizontal && !widget.enableButtonWrap)
       return Container(
-        height: widget.height + widget.padding * 2,
+        height: widget.height * (widget.buttonLables.length * 1.5),
         child: Center(
           child: CustomListViewSpacing(
-            spacing: widget.itemMargin,
-            scrollDirection: Axis.horizontal,
-            children: _buildButtonsRow(),
+            spacing: widget.itemMargin.vertical,
+            scrollDirection: Axis.vertical,
+            children: _buildButtonsColumn(),
           ),
         ),
       );

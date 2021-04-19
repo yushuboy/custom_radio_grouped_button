@@ -11,8 +11,8 @@ class CustomCheckBoxGroup<T> extends StatefulWidget {
     required this.buttonValuesList,
     this.buttonTextStyle = const ButtonTextStyle(),
     this.height = 35,
-    this.padding = 0,
-    this.itemMargin = 0.0,
+    this.itemPadding = const EdgeInsets.all(0),
+    this.itemMargin = const EdgeInsets.all(0),
     this.autoWidth = false,
     this.width = 100,
     this.enableShape = false,
@@ -30,14 +30,13 @@ class CustomCheckBoxGroup<T> extends StatefulWidget {
     this.enableRowAverage = false,
   })  : assert(buttonLables.length == buttonValuesList.length,
             "Button values list and button lables list should have same number of eliments "),
-        assert(unSelectedColor != null, "Unselected color cannot be null"),
         assert(buttonValuesList.toSet().length == buttonValuesList.length,
             "Multiple buttons with same value cannot exist"),
         assert((customShape != null && enableShape == true) || (customShape == null),
-            "customShape only works when enableShape is true"),
-        // assert(buttonLables.toSet().length == buttonLables.length,
-        //     "Multiple buttons label wth same value cannot exist"),
-        assert(selectedColor != null, "Selected color cannot be null");
+            "customShape only works when enableShape is true");
+
+  // assert(buttonLables.toSet().length == buttonLables.length,
+  //     "Multiple buttons label wth same value cannot exist"),
 
   ///Orientation of the Button Group
   final bool horizontal;
@@ -50,10 +49,11 @@ class CustomCheckBoxGroup<T> extends StatefulWidget {
 
   ///Default value is 35
   final double height;
-  double padding;
+
+  final EdgeInsetsGeometry itemPadding;
 
   ///Spacing between buttons
-  double itemMargin;
+  final EdgeInsetsGeometry itemMargin;
 
   ///Only applied when in vertical mode
   ///This will use minimum space required
@@ -120,67 +120,8 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
   List<Widget> _buildButtonsColumn() {
     return widget.buttonValuesList.map((e) {
       int index = widget.buttonValuesList.indexOf(e);
-      return Padding(
-        padding: EdgeInsets.all(widget.padding),
-        child: Card(
-          margin: EdgeInsets.all(widget.itemMargin),
-          color: selectedLables.contains(e) ? widget.selectedColor : widget.unSelectedColor,
-          elevation: widget.elevation,
-          shape: widget.enableShape
-              ? widget.customShape == null
-                  ? RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                    )
-                  : widget.customShape
-              : null,
-          child: Container(
-            height: widget.height,
-            child: MaterialButton(
-              shape: widget.enableShape
-                  ? widget.customShape == null
-                      ? OutlineInputBorder(
-                          borderSide: BorderSide(color: borderColor(e), width: 1),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        )
-                      : widget.customShape
-                  : OutlineInputBorder(
-                      borderSide: BorderSide(color: borderColor(e), width: 1),
-                      borderRadius: BorderRadius.zero,
-                    ),
-              onPressed: () {
-                if (selectedLables.contains(e)) {
-                  selectedLables.remove(e);
-                } else {
-                  selectedLables.add(e);
-                }
-                setState(() {});
-                widget.checkBoxButtonValues(selectedLables);
-              },
-              child: Center(
-                child: Text(
-                  widget.buttonLables[index],
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: widget.buttonTextStyle.textStyle.copyWith(
-                    color: selectedLables.contains(e)
-                        ? widget.buttonTextStyle.selectedColor
-                        : widget.buttonTextStyle.unSelectedColor,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  List<Widget> _buildButtonsRow() {
-    return widget.buttonValuesList.map((e) {
-      int index = widget.buttonValuesList.indexOf(e);
       return Card(
-        margin: EdgeInsets.all(widget.itemMargin),
+        margin: widget.itemMargin,
         color: selectedLables.contains(e) ? widget.selectedColor : widget.unSelectedColor,
         elevation: widget.elevation,
         shape: widget.enableShape
@@ -192,9 +133,8 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
             : null,
         child: Container(
           height: widget.height,
-          width: widget.autoWidth ? null : widget.width,
-          constraints: BoxConstraints(maxWidth: 250),
           child: MaterialButton(
+            padding: widget.itemPadding,
             shape: widget.enableShape
                 ? widget.customShape == null
                     ? OutlineInputBorder(
@@ -215,17 +155,72 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
               setState(() {});
               widget.checkBoxButtonValues(selectedLables);
             },
-            child: Center(
-              child: Text(
-                widget.buttonLables[index],
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: widget.buttonTextStyle.textStyle.copyWith(
-                  color: selectedLables.contains(e)
-                      ? widget.buttonTextStyle.selectedColor
-                      : widget.buttonTextStyle.unSelectedColor,
-                ),
+            child: Text(
+              widget.buttonLables[index],
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: widget.buttonTextStyle.textStyle.copyWith(
+                color: selectedLables.contains(e)
+                    ? widget.buttonTextStyle.selectedColor
+                    : widget.buttonTextStyle.unSelectedColor,
+              ),
+            ),
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  List<Widget> _buildButtonsRow() {
+    return widget.buttonValuesList.map((e) {
+      int index = widget.buttonValuesList.indexOf(e);
+      return Card(
+        margin: widget.itemMargin,
+        color: selectedLables.contains(e) ? widget.selectedColor : widget.unSelectedColor,
+        elevation: widget.elevation,
+        shape: widget.enableShape
+            ? widget.customShape == null
+                ? RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                  )
+                : widget.customShape
+            : null,
+        child: Container(
+          height: widget.height,
+          width: widget.autoWidth ? null : widget.width,
+          constraints: BoxConstraints(maxWidth: 250),
+          child: MaterialButton(
+            padding: widget.itemPadding,
+            shape: widget.enableShape
+                ? widget.customShape == null
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(color: borderColor(e), width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      )
+                    : widget.customShape
+                : OutlineInputBorder(
+                    borderSide: BorderSide(color: borderColor(e), width: 1),
+                    borderRadius: BorderRadius.zero,
+                  ),
+            onPressed: () {
+              if (selectedLables.contains(e)) {
+                selectedLables.remove(e);
+              } else {
+                selectedLables.add(e);
+              }
+              setState(() {});
+              widget.checkBoxButtonValues(selectedLables);
+            },
+            child: Text(
+              widget.buttonLables[index],
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: widget.buttonTextStyle.textStyle.copyWith(
+                color: selectedLables.contains(e)
+                    ? widget.buttonTextStyle.selectedColor
+                    : widget.buttonTextStyle.unSelectedColor,
               ),
             ),
           ),
@@ -237,9 +232,6 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.itemMargin == 0) {
-      widget.padding = 0;
-    }
     return _buildCheckBoxButtons();
   }
 
@@ -253,20 +245,20 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
       );
     if (widget.horizontal)
       return Container(
-        height: widget.height * (widget.buttonLables.length * 1.5) + widget.padding * 2 * widget.buttonLables.length,
+        height: widget.height,
         child: Center(
           child: CustomListViewSpacing(
-            spacing: widget.itemMargin,
-            scrollDirection: Axis.vertical,
-            children: _buildButtonsColumn(),
+            spacing: widget.itemMargin.horizontal,
+            scrollDirection: Axis.horizontal,
+            children: _buildButtonsRow(),
           ),
         ),
       );
-    if (!widget.horizontal && widget.enableButtonWrap)
+    if (widget.horizontal && widget.enableButtonWrap)
       return Container(
         child: Center(
           child: Wrap(
-            spacing: widget.itemMargin,
+            spacing: widget.itemMargin.horizontal,
             direction: Axis.horizontal,
             alignment: widget.wrapAlignment,
             children: _buildButtonsRow(),
@@ -275,12 +267,12 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
       );
     if (!widget.horizontal && !widget.enableButtonWrap)
       return Container(
-        height: widget.height + widget.padding * 2,
+        height: widget.height * (widget.buttonLables.length * 1.5),
         child: Center(
           child: CustomListViewSpacing(
-            spacing: widget.itemMargin,
-            scrollDirection: Axis.horizontal,
-            children: _buildButtonsRow(),
+            spacing: widget.itemMargin.vertical,
+            scrollDirection: Axis.vertical,
+            children: _buildButtonsColumn(),
           ),
         ),
       );

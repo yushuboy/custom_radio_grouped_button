@@ -1,4 +1,5 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RadioButton extends StatelessWidget {
@@ -48,8 +49,9 @@ class RadioButton extends StatelessWidget {
                         height: 10,
                       ),
                       CustomRadioButton(
-                        horizontal: true,
+                        horizontal: false,
                         enableShape: true,
+                        itemPadding: EdgeInsets.all(3),
                         unSelectedColor: Theme.of(context).canvasColor,
                         buttonLables: ['Student', 'Parent', 'Teacher', 'hgfh', 'jhgiugx'],
                         buttonValues: ["STUDENT", "PARENT", "TEACHER", 'hgfh', 'jhgiugx'],
@@ -61,7 +63,7 @@ class RadioButton extends StatelessWidget {
                           side: BorderSide(color: Colors.blue, width: 1),
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
-                        itemMargin: 3,
+                        itemMargin: EdgeInsets.all(0),
                         selectedColor: Theme.of(context).accentColor,
                         selectedBorderColor: Theme.of(context).accentColor,
                         unSelectedBorderColor: Theme.of(context).canvasColor,
@@ -83,10 +85,11 @@ class RadioButton extends StatelessWidget {
                         height: 10,
                       ),
                       CustomRadioButton(
-                        horizontal: true,
+                        horizontal: false,
                         enableShape: true,
                         elevation: 0,
-                        itemMargin: 3,
+                        itemMargin: EdgeInsets.all(0),
+                        itemPadding: EdgeInsets.all(5),
                         unSelectedColor: Theme.of(context).canvasColor,
                         buttonLables: [
                           'Student',
@@ -142,7 +145,7 @@ class RadioButton extends StatelessWidget {
                     ),
                     CustomRadioButton(
                       elevation: 0,
-                      itemMargin: 0,
+                      itemMargin: EdgeInsets.all(0),
                       buttonLables: [
                         'Student',
                         'Parent',
@@ -153,6 +156,7 @@ class RadioButton extends StatelessWidget {
                         "PARENT",
                         "TEACHER",
                       ],
+                      horizontal: true,
                       enableShape: true,
                       customShape: RoundedRectangleBorder(
                         side: BorderSide(color: Colors.blue, width: 1),
@@ -184,34 +188,35 @@ class RadioButton extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    CustomRadioButton(
+                    CustomRadioButton<int>(
                       enableShape: true,
                       elevation: 0,
-                      itemMargin: 1,
+                      itemMargin: EdgeInsets.all(0),
                       height: 30,
-                      defaultSelected: "Sunday",
+                      itemPadding: EdgeInsets.all(3),
+                      defaultSelected: 1,
                       enableRowAverage: true,
-                      autoWidth: false,
+                      autoWidth: true,
                       buttonLables: [
                         "Monday",
                         "Tuesday",
                         "Wednesday",
                         "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday",
+                        // "Friday",
+                        // "Saturday",
+                        // "Sunday",
                       ],
                       buttonValues: [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday",
+                        1,
+                        2,
+                        3,
+                        4,
+                        // 5,
+                        // 6,
+                        // 7,
                       ],
-                      radioButtonValue: (value) {
-                        print(value);
+                      radioButtonValue: (dynamic value) {
+                        print("$value");
                       },
                       customShape: RoundedRectangleBorder(
                         side: BorderSide(color: Colors.blue, width: 1),
